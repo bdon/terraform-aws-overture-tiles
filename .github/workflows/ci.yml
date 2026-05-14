@@ -16,9 +16,14 @@ jobs:
   fmt:
     name: Format
     runs-on: ubuntu-slim
+    concurrency:
+      group: fmt-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - uses: opentofu/setup-opentofu@fc711fa910b93cba0f3fbecaafc9f42fd0c411cb # v2.0.0
         with:
@@ -34,9 +39,14 @@ jobs:
   validate:
     name: Validate
     runs-on: ubuntu-slim
+    concurrency:
+      group: validate-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - uses: opentofu/setup-opentofu@fc711fa910b93cba0f3fbecaafc9f42fd0c411cb # v2.0.0
         with:
@@ -64,9 +74,14 @@ jobs:
     name: Test
     runs-on: ubuntu-slim
     needs: [fmt, validate]
+    concurrency:
+      group: test-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - uses: opentofu/setup-opentofu@fc711fa910b93cba0f3fbecaafc9f42fd0c411cb # v2.0.0
         with:
@@ -89,9 +104,14 @@ jobs:
     name: Lint
     runs-on: ubuntu-slim
     needs: [validate]
+    concurrency:
+      group: lint-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - uses: opentofu/setup-opentofu@fc711fa910b93cba0f3fbecaafc9f42fd0c411cb # v2.0.0
         with:

@@ -12,31 +12,6 @@ locals {
     length(data.aws_ssm_parameter.ecs_optimized_ami) > 0 ? data.aws_ssm_parameter.ecs_optimized_ami[0].value : null
   )
 
-  # User data that formats the NVMe instance-store volume as ext4 and mounts it
-  # as the Docker data root. This maximises available scratch space on
-  # NVMe-backed instance families (c7gd, im4gn, etc.).
-  #
-  # The script picks the largest block device reported by lsblk so it works
-  # across instance sizes that expose different device names.
-  instance_storage_user_data = base64encode(join("\n", [
-    "Content-Type: multipart/mixed; boundary=\"==BOUNDARY==\"",
-    "MIME-Version: 1.0",
-    "",
-    "--==BOUNDARY==",
-    "Content-Type: text/x-shellscript; charset=\"us-ascii\"",
-    "",
-    "#!/bin/bash",
-    "set -euo pipefail",
-    "volume_name=$(lsblk -x SIZE -o NAME | tail -n 1)",
-    "mkfs -t ext4 /dev/$volume_name",
-    "mkdir -p /docker",
-    "mount /dev/$volume_name /docker",
-    "echo '{\"data-root\": \"/docker\"}' > /etc/docker/daemon.json",
-    "systemctl restart docker",
-    "",
-    "--==BOUNDARY==--",
-  ]))
-
   resolved_log_group_name       = coalesce(var.name_overrides.cloudwatch_log_group, "/aws/batch/${var.name_prefix}")
   resolved_lt_name_pfx          = coalesce(var.launch_template.name_prefix, "${var.name_prefix}-")
   resolved_compute_env_name_pfx = coalesce(var.compute_environment.name_prefix, "${var.name_prefix}-")
@@ -50,7 +25,7 @@ resource "aws_launch_template" "batch" {
   user_data = (
     var.launch_template.user_data != null
     ? base64encode(var.launch_template.user_data)
-    : (var.launch_template.configure_instance_storage ? local.instance_storage_user_data : null)
+    : null
   )
 
   dynamic "block_device_mappings" {

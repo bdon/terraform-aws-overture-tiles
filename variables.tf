@@ -83,6 +83,7 @@ variable "cloudfront_price_class" {
   type        = string
   default     = "PriceClass_All"
 
+  # Valid values: https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-properties-cloudfront-distribution-distributionconfig.html
   validation {
     condition     = contains(["PriceClass_100", "PriceClass_200", "PriceClass_All"], var.cloudfront_price_class)
     error_message = "cloudfront_price_class must be one of PriceClass_100, PriceClass_200, or PriceClass_All."
@@ -141,7 +142,6 @@ variable "launch_template" {
     existing_id                = optional(string)
     name_prefix                = optional(string)
     ami_id                     = optional(string)
-    configure_instance_storage = optional(bool, true)
     user_data                  = optional(string)
     tag_specifications = optional(list(object({
       resource_type = string

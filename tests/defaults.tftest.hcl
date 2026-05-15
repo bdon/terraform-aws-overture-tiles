@@ -148,10 +148,10 @@ run "default_config_plan" {
     error_message = "Default allocation strategy should be BEST_FIT."
   }
 
-  # Instance storage user data is set by default.
+  # User data is null when no user_data is provided.
   assert {
-    condition     = aws_launch_template.batch[0].user_data != null
-    error_message = "User data should be set when configure_instance_storage is true (default)."
+    condition     = aws_launch_template.batch[0].user_data == null
+    error_message = "User data should be null when no user_data is provided."
   }
 
   # Log group is created.

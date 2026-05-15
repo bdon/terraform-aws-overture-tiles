@@ -124,7 +124,7 @@ resource "aws_batch_compute_environment" "tiles" {
 
     launch_template {
       launch_template_id = aws_launch_template.batch.id
-      version            = "$Latest"
+      version            = var.launch_template_version
     }
 
     dynamic "ec2_configuration" {

@@ -56,7 +56,7 @@ resource "aws_route_table_association" "public" {
 resource "aws_security_group" "batch" {
   name        = var.security_group_name
   name_prefix = var.security_group_name == null ? "${var.name_prefix}-batch-" : null
-  description = "Outbound-only security group for ${var.name_prefix} Batch workers"
+  description = coalesce(var.security_group_description, "Outbound-only security group for ${var.name_prefix} Batch workers")
   vpc_id      = local.vpc_id
 
   egress {
@@ -64,10 +64,9 @@ resource "aws_security_group" "batch" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
   }
 
-  tags = merge(var.tags, { Name = "${var.name_prefix}-batch" })
+  tags = merge(var.tags, { Name = coalesce(var.security_group_name, "${var.name_prefix}-batch") })
 
   lifecycle {
     create_before_destroy = true

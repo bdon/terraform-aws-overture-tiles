@@ -67,6 +67,12 @@ variable "instance_profile_name" {
   default     = null
 }
 
+variable "security_group_description" {
+  description = "Description for the Batch compute environment security group. Defaults to a generated description."
+  type        = string
+  default     = null
+}
+
 variable "security_group_name" {
   description = "Fixed name for the Batch compute environment security group. When null a name_prefix is used."
   type        = string
@@ -275,6 +281,12 @@ variable "service_role_arn" {
 
 variable "ec2_image_type" {
   description = "ECS-optimised AMI family for the ec2_configuration block (e.g. ECS_AL2023). When null the ec2_configuration block is omitted."
+  type        = string
+  default     = null
+}
+
+variable "launch_template_version" {
+  description = "Version of the launch template to reference in the Batch compute environment. When null the version attribute is omitted (Batch uses the default version)."
   type        = string
   default     = null
 }

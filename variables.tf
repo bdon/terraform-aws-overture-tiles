@@ -139,10 +139,10 @@ variable "log_retention_days" {
 variable "launch_template" {
   description = "Launch template configuration. Set existing_id to reference an externally-managed launch template and skip creation. All other fields configure the module-managed launch template."
   type = object({
-    existing_id                = optional(string)
-    name_prefix                = optional(string)
-    ami_id                     = optional(string)
-    user_data                  = optional(string)
+    existing_id = optional(string)
+    name_prefix = optional(string)
+    ami_id      = optional(string)
+    user_data   = optional(string)
     tag_specifications = optional(list(object({
       resource_type = string
       tags          = map(string)

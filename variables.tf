@@ -237,6 +237,21 @@ variable "launch_template_name_prefix" {
   default     = null
 }
 
+variable "user_data" {
+  description = "Plaintext user data script for the launch template. When set, takes precedence over configure_instance_storage. The module base64-encodes this value before passing it to the launch template."
+  type        = string
+  default     = null
+}
+
+variable "launch_template_tag_specifications" {
+  description = "List of tag_specification blocks for the launch template (e.g. for instance and volume resource types). When null no tag_specifications are added."
+  type = list(object({
+    resource_type = string
+    tags          = map(string)
+  }))
+  default = null
+}
+
 variable "ebs_device_name" {
   description = "Device name for an additional EBS volume attached via the launch template. When null no extra EBS volume is added."
   type        = string

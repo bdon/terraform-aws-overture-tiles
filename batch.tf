@@ -43,7 +43,7 @@ locals {
 resource "aws_launch_template" "batch" {
   name_prefix = local.resolved_launch_template_name_pfx
   image_id    = local.resolved_ami_id
-  user_data   = var.configure_instance_storage ? local.instance_storage_user_data : null
+  user_data   = var.user_data != null ? base64encode(var.user_data) : (var.configure_instance_storage ? local.instance_storage_user_data : null)
 
   dynamic "block_device_mappings" {
     for_each = var.ebs_device_name != null ? [1] : []
@@ -58,6 +58,14 @@ resource "aws_launch_template" "batch" {
         delete_on_termination = true
         encrypted             = true
       }
+    }
+  }
+
+  dynamic "tag_specifications" {
+    for_each = var.launch_template_tag_specifications != null ? var.launch_template_tag_specifications : []
+    content {
+      resource_type = tag_specifications.value.resource_type
+      tags          = tag_specifications.value.tags
     }
   }
 

@@ -45,6 +45,12 @@ mock_provider "aws" {
     }
   }
 
+  mock_resource "aws_launch_template" {
+    defaults = {
+      id = "lt-0mock1234567890ab"
+    }
+  }
+
   mock_resource "aws_batch_compute_environment" {
     defaults = {
       arn = "arn:aws:batch:us-east-1:123456789012:compute-environment/mock-ce"
@@ -144,7 +150,7 @@ run "default_config_plan" {
 
   # Instance storage user data is set by default.
   assert {
-    condition     = aws_launch_template.batch.user_data != null
+    condition     = aws_launch_template.batch[0].user_data != null
     error_message = "User data should be set when configure_instance_storage is true (default)."
   }
 

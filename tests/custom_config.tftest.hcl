@@ -41,6 +41,12 @@ mock_provider "aws" {
     }
   }
 
+  mock_resource "aws_launch_template" {
+    defaults = {
+      id = "lt-0mock1234567890ab"
+    }
+  }
+
   mock_resource "aws_batch_compute_environment" {
     defaults = {
       arn = "arn:aws:batch:eu-west-1:123456789012:compute-environment/mock-ce"
@@ -86,8 +92,8 @@ run "spot_compute" {
   command = plan
 
   variables {
-    bucket_name = "spot-tiles-bucket"
-    use_spot    = true
+    bucket_name         = "spot-tiles-bucket"
+    compute_environment = { use_spot = true }
   }
 
   assert {
@@ -200,12 +206,12 @@ run "no_instance_storage" {
   command = plan
 
   variables {
-    bucket_name                = "no-nvme-tiles-bucket"
-    configure_instance_storage = false
+    bucket_name     = "no-nvme-tiles-bucket"
+    launch_template = { configure_instance_storage = false }
   }
 
   assert {
-    condition     = aws_launch_template.batch.user_data == null
+    condition     = aws_launch_template.batch[0].user_data == null
     error_message = "User data should be null when configure_instance_storage is false."
   }
 }
@@ -218,12 +224,12 @@ run "custom_ami" {
   command = plan
 
   variables {
-    bucket_name = "custom-ami-tiles-bucket"
-    ami_id      = "ami-custom0123456789ab"
+    bucket_name     = "custom-ami-tiles-bucket"
+    launch_template = { ami_id = "ami-custom0123456789ab" }
   }
 
   assert {
-    condition     = aws_launch_template.batch.image_id == "ami-custom0123456789ab"
+    condition     = aws_launch_template.batch[0].image_id == "ami-custom0123456789ab"
     error_message = "Launch template should use the custom ami_id when provided."
   }
 }

@@ -272,6 +272,8 @@ variable "service_role_arn" {
   type        = string
   default     = null
 }
+
+variable "ec2_image_type" {
   description = "ECS-optimised AMI family for the ec2_configuration block (e.g. ECS_AL2023). When null the ec2_configuration block is omitted."
   type        = string
   default     = null

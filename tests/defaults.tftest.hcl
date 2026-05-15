@@ -78,19 +78,19 @@ run "default_config_plan" {
 
   # S3 bucket name is propagated correctly.
   assert {
-    condition     = aws_s3_bucket.tiles.bucket == "test-overture-tiles-bucket"
+    condition     = aws_s3_bucket.tiles[0].bucket == "test-overture-tiles-bucket"
     error_message = "Bucket name should match var.bucket_name."
   }
 
   # Public access block is disabled (all four attributes = false).
   assert {
-    condition     = aws_s3_bucket_public_access_block.tiles.block_public_acls == false
+    condition     = aws_s3_bucket_public_access_block.tiles[0].block_public_acls == false
     error_message = "block_public_acls should be false when public_access_enabled is true."
   }
 
   # CORS is configured on the bucket.
   assert {
-    condition     = length(aws_s3_bucket_cors_configuration.tiles.cors_rule) == 1
+    condition     = length(aws_s3_bucket_cors_configuration.tiles[0].cors_rule) == 1
     error_message = "Default config should have exactly one CORS rule."
   }
 

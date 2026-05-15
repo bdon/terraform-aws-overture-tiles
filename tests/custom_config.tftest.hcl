@@ -217,8 +217,23 @@ run "no_instance_storage" {
 }
 
 # ──────────────────────────────────────────────
-# run: custom AMI bypasses SSM lookup
+# run: existing launch template (bypass module-managed LT)
 # ──────────────────────────────────────────────
+
+run "existing_launch_template" {
+  command = plan
+
+  variables {
+    bucket_name     = "existing-lt-tiles-bucket"
+    launch_template = { existing_id = "lt-0existingabcdef123" }
+  }
+
+  assert {
+    condition     = length(aws_launch_template.batch) == 0
+    error_message = "No launch template should be created when existing_id is set."
+  }
+}
+
 
 run "custom_ami" {
   command = plan

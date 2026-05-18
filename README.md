@@ -170,6 +170,3 @@ To add a `MAINTAINERS.md` for a module or package, create it in the relevant dir
 | Jane Doe | @janedoe        | Lead Maintainer | Org         |
 ```
 
-## License
-
-[Apache 2.0](LICENSE)

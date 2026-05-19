@@ -17,16 +17,27 @@ locals {
   resolved_compute_env_name_pfx = coalesce(var.compute_environment.name_prefix, "${var.name_prefix}-")
 }
 
+# AWS Batch requires UserData in MIME multipart format — it merges its own ECS
+# agent bootstrap content with any user-supplied script at launch time.
+# cloudinit_config handles boundary generation and base64 encoding automatically.
+data "cloudinit_config" "batch" {
+  count = (var.launch_template.existing_id == null && var.launch_template.user_data != null) ? 1 : 0
+
+  gzip          = false
+  base64_encode = true
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = var.launch_template.user_data
+  }
+}
+
 resource "aws_launch_template" "batch" {
   count = var.launch_template.existing_id == null ? 1 : 0
 
   name_prefix = local.resolved_lt_name_pfx
   image_id    = local.resolved_ami_id
-  user_data = (
-    var.launch_template.user_data != null
-    ? base64encode(var.launch_template.user_data)
-    : null
-  )
+  user_data   = length(data.cloudinit_config.batch) > 0 ? data.cloudinit_config.batch[0].rendered : null
 
   dynamic "block_device_mappings" {
     for_each = var.ebs_volume != null ? [var.ebs_volume] : []

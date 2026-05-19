@@ -137,7 +137,7 @@ variable "log_retention_days" {
 # ──────────────────────────────────────────────
 
 variable "launch_template" {
-  description = "Launch template configuration. Set existing_id to reference an externally-managed launch template and skip creation. All other fields configure the module-managed launch template."
+  description = "Launch template configuration. Set existing_id to reference an externally-managed launch template and skip creation. All other fields configure the module-managed launch template. user_data accepts a plain shell script; the module wraps it in MIME multipart format automatically as required by AWS Batch."
   type = object({
     existing_id = optional(string)
     name_prefix = optional(string)

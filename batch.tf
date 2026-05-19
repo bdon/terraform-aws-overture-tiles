@@ -37,7 +37,7 @@ resource "aws_launch_template" "batch" {
 
   name_prefix = local.resolved_lt_name_pfx
   image_id    = local.resolved_ami_id
-  user_data = length(data.cloudinit_config.batch) > 0 ? data.cloudinit_config.batch[0].rendered : null
+  user_data   = length(data.cloudinit_config.batch) > 0 ? data.cloudinit_config.batch[0].rendered : null
 
   dynamic "block_device_mappings" {
     for_each = var.ebs_volume != null ? [var.ebs_volume] : []

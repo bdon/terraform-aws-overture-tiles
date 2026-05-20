@@ -15,7 +15,7 @@ Terraform module that provisions the AWS infrastructure required to generate and
 | CloudFront distribution       | Serves tiles globally (optional)                                                                             |
 | AWS Batch compute environment | Runs tile generation jobs on EC2 (Graviton3 + NVMe instance store by default)                                |
 | Batch job queue               | Queues tile generation work                                                                                  |
-| Batch job definitions         | One per Overture theme (`addresses`, `admins`, `base`, `buildings`, `divisions`, `places`, `transportation`) |
+| Batch job definitions         | One per Overture theme (`addresses`, `base`, `buildings`, `divisions`, `places`, `transportation`) |
 | IAM roles                     | Job role (S3 write) and ECS execution role (image pull, CloudWatch Logs)                                     |
 | CloudWatch log group          | Captures Batch job output                                                                                    |
 | VPC + subnets                 | Optional — created when `create_vpc = true`                                                                  |
@@ -33,7 +33,7 @@ module "overture_tiles" {
   name_prefix                    = "overture-tiles"
   create_cloudfront_distribution = true
   cloudfront_price_class         = "PriceClass_All"
-  themes                         = ["addresses", "admins", "base", "buildings", "divisions", "places", "transportation"]
+  themes                         = ["addresses", "base", "buildings", "divisions", "places", "transportation"]
   container_image                = "ghcr.io/overturemaps/overture-tiles:latest"
   job_memory_gib                 = 60
   job_vcpus                      = 30

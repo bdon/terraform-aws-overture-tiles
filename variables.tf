@@ -103,7 +103,7 @@ variable "container_image" {
 variable "themes" {
   description = "Overture themes for which to create individual Batch job definitions."
   type        = list(string)
-  default     = ["addresses", "admins", "base", "buildings", "divisions", "places", "transportation"]
+  default     = ["addresses", "base", "buildings", "divisions", "places", "transportation"]
 
   validation {
     condition = alltrue([

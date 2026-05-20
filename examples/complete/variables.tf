@@ -18,7 +18,7 @@ variable "name_prefix" {
 variable "themes" {
   description = "Overture themes to create Batch job definitions for."
   type        = list(string)
-  default     = ["addresses", "admins", "base", "buildings", "divisions", "places", "transportation"]
+  default     = ["addresses", "base", "buildings", "divisions", "places", "transportation"]
 }
 
 variable "tags" {

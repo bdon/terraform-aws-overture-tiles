@@ -114,8 +114,8 @@ run "default_config_plan" {
 
   # Seven job definitions, one per default theme.
   assert {
-    condition     = length(aws_batch_job_definition.tiles) == 7
-    error_message = "Should create exactly 7 Batch job definitions (one per default theme)."
+    condition     = length(aws_batch_job_definition.tiles) == 6
+    error_message = "Should create exactly 6 Batch job definitions (one per default theme)."
   }
 
   # Job queue references the compute environment.
